@@ -1,0 +1,12 @@
+D:\Projects\C#\MAP\MAP\bin\Debug\Bass.Net.dll
+D:\Projects\C#\MAP\MAP\bin\Debug\bass.dll
+D:\Projects\C#\MAP\MAP\bin\Debug\MAP.exe.config
+D:\Projects\C#\MAP\MAP\bin\Debug\MAP.exe
+D:\Projects\C#\MAP\MAP\bin\Debug\MAP.pdb
+D:\Projects\C#\MAP\MAP\obj\Debug\MAP.Form1.resources
+D:\Projects\C#\MAP\MAP\obj\Debug\MAP.Properties.Resources.resources
+D:\Projects\C#\MAP\MAP\obj\Debug\MAP.csproj.GenerateResource.cache
+D:\Projects\C#\MAP\MAP\obj\Debug\MAP.csproj.CoreCompileInputs.cache
+D:\Projects\C#\MAP\MAP\obj\Debug\MAP.csproj.CopyComplete
+D:\Projects\C#\MAP\MAP\obj\Debug\MAP.exe
+D:\Projects\C#\MAP\MAP\obj\Debug\MAP.pdb
