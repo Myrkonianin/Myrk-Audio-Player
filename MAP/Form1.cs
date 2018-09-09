@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using System.IO;
+using System.Text.RegularExpressions;
+
 namespace MAP
 {
     public partial class Form1 : Form
@@ -96,18 +98,23 @@ namespace MAP
             else
             {
                 sr = new StreamReader(v.docsPath + "\\settings.json");
+                
                 string tmp = " "; tmp = sr.ReadToEnd();
+                sr.Close();
+                if (tmp.Contains("\\"))
+                {
+                    tmp = Regex.Replace(tmp,@"\\", @"\\");
+                }
+                //MessageBox.Show(tmp);
                 ssettings newsettings = new ssettings();
+
                 newsettings = JsonConvert.DeserializeObject<ssettings>(tmp);
 
                 string tmpp = newsettings.autoloadPlName;
 
-                tmpp.Replace("\\\\", "\\");
-                //MessageBox.Show(tmpp);
-
                 if (newsettings.autoloadPl && newsettings.autoloadPlName != "writeme")
                 {
-                    StreamReader tmpr = new StreamReader(newsettings.autoloadPlName);
+                    StreamReader tmpr = new StreamReader(tmpp);
                     string newJs = tmpr.ReadToEnd();
                     PlayList newPl = new PlayList();
                     newPl = JsonConvert.DeserializeObject<PlayList>(newJs);
@@ -146,15 +153,6 @@ namespace MAP
             for(int i = 0; i < tmp.Length; i++)
             {
                 addSong(tmp[i]);
-                //v.files.Add(tmp[i]);
-                
-                //TagModel tm = new TagModel(tmp[i]);             
-                //if (v.tagSongShow)
-                //{
-                //    playList.Items.Add(tm.artist + "-" + tm.title);
-                //}
-                //else
-                //    playList.Items.Add(v.GetFileName(tmp[i]));
             }
                         
             playList.SelectedIndex = 0;
@@ -220,13 +218,6 @@ namespace MAP
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //PlayList pl = new PlayList();
-            //pl.pl = v.files;
-            //string plSer = JsonConvert.SerializeObject(pl);
-            //StreamWriter sw = new StreamWriter("playlist.json");
-            //sw.Write(plSer);
-            //sw.Close();
-
             StreamReader sr = new StreamReader(v.docsPath + "\\settings.json");
             string tmp = " "; tmp = sr.ReadToEnd();
             ssettings newsettings = new ssettings();
@@ -243,29 +234,6 @@ namespace MAP
 
         private void loadJson_Click(object sender, EventArgs e)
         {
-
-            //////////if (!File.Exists("playlist.json"))
-            //////////{
-            //////////    MessageBox.Show("Плейлист по умолчнию не существует, создайте(сохраните) его сами.");
-            //////////    return;
-            //////////}
-            //////////StreamReader sr = new StreamReader("playlist.json");
-            //////////if (sr.Equals(" "))
-            //////////{
-            //////////    MessageBox.Show("I can't load a playlist.");
-            //////////    return;
-            //////////}
-
-            //////////string newJs = sr.ReadToEnd();
-            //////////PlayList newPl = new PlayList();
-            //////////newPl = JsonConvert.DeserializeObject<PlayList>(newJs);
-            ////////////playList.Items.Add(newPl.pl);
-            //////////playList.Items.Clear();
-            //////////for (int i = 0; i >= newPl.pl.Count; i++)
-            //////////{
-            //////////    addSong(newPl.pl[i]);
-            //////////}
-            //////////sr.Close();
 
             settings ssettings = new settings();
             string docsPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
@@ -446,6 +414,11 @@ namespace MAP
                     tmp += i + " - " + v.files[i] + "\n";
             }
             MessageBox.Show(tmp);
+        }
+
+        private void up_Click(object sender, EventArgs e)
+        {
+            playList.SelectedIndex--;
         }
     }
 
