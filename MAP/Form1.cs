@@ -100,7 +100,10 @@ namespace MAP
                 ssettings newsettings = new ssettings();
                 newsettings = JsonConvert.DeserializeObject<ssettings>(tmp);
 
+                string tmpp = newsettings.autoloadPlName;
 
+                tmpp.Replace("\\\\", "\\");
+                MessageBox.Show(tmpp);
 
                 if (newsettings.autoloadPl && newsettings.autoloadPlName != "writeme")
                 {
