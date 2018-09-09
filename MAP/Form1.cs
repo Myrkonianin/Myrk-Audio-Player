@@ -103,7 +103,7 @@ namespace MAP
                 string tmpp = newsettings.autoloadPlName;
 
                 tmpp.Replace("\\\\", "\\");
-                MessageBox.Show(tmpp);
+                //MessageBox.Show(tmpp);
 
                 if (newsettings.autoloadPl && newsettings.autoloadPlName != "writeme")
                 {
