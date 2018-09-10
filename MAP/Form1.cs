@@ -18,6 +18,7 @@ namespace MAP
 
         public int indexToMove = 0;
         public string[] args;
+
         public Form1()
         {
             InitializeComponent();
@@ -91,7 +92,7 @@ namespace MAP
             StreamReader sr;
 
             basslib.InitBass();
-
+            ssettings newsettings = new ssettings();
 
             if (!File.Exists(docsPath + "\\settings.json"))
             {
@@ -107,13 +108,10 @@ namespace MAP
                 {
                     tmp = Regex.Replace(tmp,@"\\", @"\\");
                 }
-                //MessageBox.Show(tmp);
-                ssettings newsettings = new ssettings();
 
                 newsettings = JsonConvert.DeserializeObject<ssettings>(tmp);
 
                 string tmpp = newsettings.autoloadPlName;
-
                 if (newsettings.autoloadPl && newsettings.autoloadPlName != "writeme")
                 {
                     StreamReader tmpr = new StreamReader(tmpp);
@@ -125,7 +123,7 @@ namespace MAP
                     for (int i = 0; i < newPl.pl.Count; i++)
                     {
                         playList.Items.Add(v.GetFileName(newPl.pl[i]));
-
+                        v.f.Add(newPl.pl[i]);
                     }
                     v.files = newPl.pl;
                     tmpr.Close();
@@ -138,47 +136,31 @@ namespace MAP
                 }
 
                 v.tagSongShow = newsettings.tagSongNameShow;
+                //v.defpl = newsettings.autoloadPlName;
             }
             openFileDialog1.Filter = "MPEG-1 Audio Layer 3|*.mp3";
-            
-            //drag'n'drop // CopyPast forever
             playList.AllowDrop = true;
             playList.MouseMove += PlayList_MouseMove;
             playList.DragEnter += PlayList_DragEnter;
             playList.DragDrop += PlayList_DragDrop;
-
             
-
-
-            
+            v.defpl = newsettings.autoloadPlName;
         }
 
         private void PlayList_DragDrop(object sender, DragEventArgs e)
         {
-            //индекс, куда перемещаем
-            //listBox1.PointToClient(new Point(e.X, e.Y)) - необходимо
-            //использовать поскольку в e храниться
-            //положение мыши в экранных коородинатах, а эта
-            //функция позволяет преобразовать в клиентские
             int newIndex = playList.IndexFromPoint(playList.PointToClient(new Point(e.X, e.Y)));
-            //если вставка происходит в начало списка
+            
             if (newIndex == -1)
             {
-                //получаем перетаскиваемый элемент
                 object itemToMove = playList.Items[indexToMove];
-                //удаляем элемент
                 playList.Items.RemoveAt(indexToMove);
-                //добавляем в конец списка
                 playList.Items.Add(itemToMove);
             }
-            //вставляем где-то в середину списка
             else if (indexToMove != newIndex)
             {
-                //получаем перетаскиваемый элемент
                 object itemToMove = playList.Items[indexToMove];
-                //удаляем элемент
                 playList.Items.RemoveAt(indexToMove);
-                //вставляем в конкретную позицию
                 playList.Items.Insert(newIndex, itemToMove);
             }
         }
@@ -190,10 +172,8 @@ namespace MAP
 
         private void PlayList_MouseMove(object sender, MouseEventArgs e)
         {
-            //если нажата левая кнопка мыши, начинаем Drag&Drop
             if (e.Button == MouseButtons.Left)
             {
-                //индекс элемента, который мы перемещаем
                 indexToMove = playList.IndexFromPoint(e.X, e.Y);
                 playList.DoDragDrop(indexToMove, DragDropEffects.Move);
             }
@@ -323,7 +303,7 @@ namespace MAP
                 for (int i = 0; i < newPl.pl.Count; i++)
                 {
                     playList.Items.Add(v.GetFileName(newPl.pl[i]));
-
+                    v.f.Add(newPl.pl[i]);
                 }
                 v.files = newPl.pl;
                 tmpr.Close();
@@ -347,7 +327,7 @@ namespace MAP
         private void openFileDialog2_FileOk(object sender, CancelEventArgs e)
         {
             StreamReader sr = new StreamReader(openFileDialog2.FileName);
-            if (sr.Equals(" "))
+            if (sr.Equals(""))
             {
                 MessageBox.Show("I can't load a playlist.");
                 return;
@@ -383,16 +363,53 @@ namespace MAP
             v.files = newPl.pl;
             sr.Close();
 
-            playList.SelectedIndex = 0;
+            try
+            {
+                playList.SelectedIndex = 0;
+            }catch(Exception ex) { }
         }
 
         
 
         private void saveFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
-            PlayList pl = new PlayList();
-            //v.files.Clear();
             
+
+            PlayList pl = new PlayList();
+            string tmp = "v.files = '";
+            v.files.Clear();
+            ////------------------
+            //v.f.Clear();
+            //if(saveFileDialog1.FileName == "-")
+            //{
+            //    MessageBox.Show("Ты мне втираешь какую-то дичь.");
+            //}else
+            //{
+            //    MessageBox.Show(saveFileDialog1.FileName);
+            //}
+            //StreamReader tmpr = new StreamReader(saveFileDialog1.FileName);
+            //string newJs = tmpr.ReadToEnd();
+            //PlayList newPl = new PlayList();
+            //newPl = JsonConvert.DeserializeObject<PlayList>(newJs);
+            //playList.Items.Clear();
+            //v.files.Clear();
+            //for (int i = 0; i < newPl.pl.Count; i++)
+            //{
+            //    v.f.Add(newPl.pl[i]);
+            //}
+            ////v.files = newPl.pl;
+            //tmpr.Close();
+            ////-----------------
+
+            for (int i = 0; i < playList.Items.Count; i++)
+            {
+                v.files.Add(v.f[i]);
+                tmp += v.files[i] + "\n";
+            }
+            
+            tmp += "'";
+            //MessageBox.Show(tmp);
+
             pl.pl = v.files;
             
             string plSer = JsonConvert.SerializeObject(pl);
