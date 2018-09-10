@@ -10,5 +10,3 @@ D:\Projects\C#\MAP\MAP\obj\Debug\MAP.csproj.CoreCompileInputs.cache
 D:\Projects\C#\MAP\MAP\obj\Debug\MAP.csproj.CopyComplete
 D:\Projects\C#\MAP\MAP\obj\Debug\MAP.exe
 D:\Projects\C#\MAP\MAP\obj\Debug\MAP.pdb
-D:\Projects\C#\MAP\MAP\bin\Debug\Newtonsoft.Json.xml
-D:\Projects\C#\MAP\MAP\obj\Debug\MAP.csprojAssemblyReference.cache

@@ -53,8 +53,6 @@
             this.next = new System.Windows.Forms.Button();
             this.previous = new System.Windows.Forms.Button();
             this.remove = new System.Windows.Forms.Button();
-            this.up = new System.Windows.Forms.Button();
-            this.down = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.tbPos)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbVol)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -254,33 +252,11 @@
             this.remove.UseVisualStyleBackColor = true;
             this.remove.Click += new System.EventHandler(this.remove_Click);
             // 
-            // up
-            // 
-            this.up.Location = new System.Drawing.Point(62, 116);
-            this.up.Name = "up";
-            this.up.Size = new System.Drawing.Size(21, 21);
-            this.up.TabIndex = 14;
-            this.up.Text = "↑";
-            this.up.UseVisualStyleBackColor = true;
-            this.up.Click += new System.EventHandler(this.up_Click);
-            // 
-            // down
-            // 
-            this.down.Location = new System.Drawing.Point(89, 116);
-            this.down.Name = "down";
-            this.down.Size = new System.Drawing.Size(21, 21);
-            this.down.TabIndex = 14;
-            this.down.Text = "↓";
-            this.down.UseVisualStyleBackColor = true;
-            this.down.Click += new System.EventHandler(this.remove_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(320, 380);
-            this.Controls.Add(this.down);
-            this.Controls.Add(this.up);
             this.Controls.Add(this.remove);
             this.Controls.Add(this.previous);
             this.Controls.Add(this.next);
@@ -334,8 +310,6 @@
         private System.Windows.Forms.Button next;
         private System.Windows.Forms.Button previous;
         private System.Windows.Forms.Button remove;
-        private System.Windows.Forms.Button up;
-        private System.Windows.Forms.Button down;
     }
 }
 

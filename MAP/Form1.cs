@@ -15,6 +15,8 @@ namespace MAP
 {
     public partial class Form1 : Form
     {
+
+        public int indexToMove = 0;
         public string[] args;
         public Form1()
         {
@@ -139,6 +141,62 @@ namespace MAP
             }
             openFileDialog1.Filter = "MPEG-1 Audio Layer 3|*.mp3";
             
+            //drag'n'drop // CopyPast forever
+            playList.AllowDrop = true;
+            playList.MouseMove += PlayList_MouseMove;
+            playList.DragEnter += PlayList_DragEnter;
+            playList.DragDrop += PlayList_DragDrop;
+
+            
+
+
+            
+        }
+
+        private void PlayList_DragDrop(object sender, DragEventArgs e)
+        {
+            //индекс, куда перемещаем
+            //listBox1.PointToClient(new Point(e.X, e.Y)) - необходимо
+            //использовать поскольку в e храниться
+            //положение мыши в экранных коородинатах, а эта
+            //функция позволяет преобразовать в клиентские
+            int newIndex = playList.IndexFromPoint(playList.PointToClient(new Point(e.X, e.Y)));
+            //если вставка происходит в начало списка
+            if (newIndex == -1)
+            {
+                //получаем перетаскиваемый элемент
+                object itemToMove = playList.Items[indexToMove];
+                //удаляем элемент
+                playList.Items.RemoveAt(indexToMove);
+                //добавляем в конец списка
+                playList.Items.Add(itemToMove);
+            }
+            //вставляем где-то в середину списка
+            else if (indexToMove != newIndex)
+            {
+                //получаем перетаскиваемый элемент
+                object itemToMove = playList.Items[indexToMove];
+                //удаляем элемент
+                playList.Items.RemoveAt(indexToMove);
+                //вставляем в конкретную позицию
+                playList.Items.Insert(newIndex, itemToMove);
+            }
+        }
+
+        private void PlayList_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Move;
+        }
+
+        private void PlayList_MouseMove(object sender, MouseEventArgs e)
+        {
+            //если нажата левая кнопка мыши, начинаем Drag&Drop
+            if (e.Button == MouseButtons.Left)
+            {
+                //индекс элемента, который мы перемещаем
+                indexToMove = playList.IndexFromPoint(e.X, e.Y);
+                playList.DoDragDrop(indexToMove, DragDropEffects.Move);
+            }
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -220,6 +278,10 @@ namespace MAP
         {
             StreamReader sr = new StreamReader(v.docsPath + "\\settings.json");
             string tmp = " "; tmp = sr.ReadToEnd();
+            if (tmp.Contains("\\"))
+            {
+                tmp = Regex.Replace(tmp, @"\\", @"\\");
+            }
             ssettings newsettings = new ssettings();
             newsettings = JsonConvert.DeserializeObject<ssettings>(tmp);
 
@@ -242,11 +304,16 @@ namespace MAP
             
             sr = new StreamReader(v.docsPath + "\\settings.json");
             string tmp = " "; tmp = sr.ReadToEnd();
+            if (tmp.Contains("\\"))
+            {
+                tmp = Regex.Replace(tmp, @"\\", @"\\");
+            }
             ssettings newsettings = new ssettings();
             newsettings = JsonConvert.DeserializeObject<ssettings>(tmp);
 
             if (newsettings.autoloadPl && newsettings.autoloadPlName != "writeme")
             {
+
                 StreamReader tmpr = new StreamReader(newsettings.autoloadPlName);
                 string newJs = tmpr.ReadToEnd();
                 PlayList newPl = new PlayList();
@@ -324,8 +391,15 @@ namespace MAP
         private void saveFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
             PlayList pl = new PlayList();
+            //v.files.Clear();
+            
             pl.pl = v.files;
+            
             string plSer = JsonConvert.SerializeObject(pl);
+            if (File.Exists(saveFileDialog1.FileName))
+            {
+                File.Delete(saveFileDialog1.FileName);
+            }
             StreamWriter sw = new StreamWriter(saveFileDialog1.FileName);
             sw.Write(plSer);
             sw.Close();
@@ -333,7 +407,7 @@ namespace MAP
 
         private void about_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Myrk Audio Player (MAP). Я его делал только лишь для себя, если ты не Myrk, и ты видишь это сообщение, то ты гей вонючий", "About MAP");
+            MessageBox.Show("Myrk Audio Player (MAP). Я его делал только лишь для себя.", "About MAP");
         }
 
         private void next_Click(object sender, EventArgs e)
@@ -415,16 +489,13 @@ namespace MAP
             }
             MessageBox.Show(tmp);
         }
-
-        private void up_Click(object sender, EventArgs e)
-        {
-            playList.SelectedIndex--;
-        }
+        
     }
 
     public class PlayList
     {
         public List<string> pl = new List<string>();
+        //public List<int> i = new List<int>();
     }
 
     public class ssettings
